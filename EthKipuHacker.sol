@@ -7,4 +7,12 @@ interface IGrader5 {
     function gradeMe(string calldata name) external;
 }
 
-contract EthKipuHacker {}
+contract EthKipuHacker {
+    IGrader5 private immutable i_grader;
+    address private immutable i_owner;
+
+    constructor(address graderAddress) {
+        i_grader = IGrader5(graderAddress);
+        i_owner = msg.sender;
+    }
+}
