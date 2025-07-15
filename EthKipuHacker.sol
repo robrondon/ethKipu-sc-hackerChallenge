@@ -16,6 +16,13 @@ contract EthKipuHacker {
         i_owner = msg.sender;
     }
 
+    function hack() external payable {
+        require(msg.sender == i_owner, "You're not the owner");
+        require(msg.value > 3, "Must send more than 4 wei");
+
+        i_grader.retrieve{value: msg.value}();
+    }
+
     function doGradeMe(string calldata name) external {
         require(msg.sender == i_owner, "You're not the owner");
         i_grader.gradeMe(name);
