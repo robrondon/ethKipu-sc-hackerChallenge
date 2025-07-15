@@ -15,4 +15,9 @@ contract EthKipuHacker {
         i_grader = IGrader5(graderAddress);
         i_owner = msg.sender;
     }
+
+    function doGradeMe(string calldata name) external {
+        require(msg.sender == i_owner, "You're not the owner");
+        i_grader.gradeMe(name);
+    }
 }
